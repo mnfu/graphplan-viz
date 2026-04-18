@@ -1,0 +1,325 @@
+/* ============================================================
+   styles.css — Graphplan Visualizer
+   Aesthetic: Technical precision — circuit diagram meets
+   academic notation. IBM Plex Mono for data, IBM Plex Sans
+   for UI. Deep navy shell, clean white canvas.
+   ============================================================ */
+
+:root {
+  --navy:       #0d1b2a;
+  --navy-mid:   #1b2e42;
+  --navy-light: #253d56;
+  --accent:     #4a90d9;
+  --gold:       #f5a623;
+  --text-main:  #e8edf2;
+  --text-dim:   #8fa3b8;
+  --border:     rgba(255,255,255,0.08);
+  --canvas-bg:  #fafbfc;
+  --radius:     6px;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --sans: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--sans);
+  background: var(--navy);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Top bar ──────────────────────────────────────────────── */
+#topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 24px;
+  height: 58px;
+  background: var(--navy);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+#title-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#logo {
+  font-size: 1.6rem;
+  color: var(--accent);
+  line-height: 1;
+}
+
+#title-block h1 {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-main);
+}
+
+#subtitle {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+  margin-top: 1px;
+}
+
+/* ── Controls ─────────────────────────────────────────────── */
+#controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-track {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 9px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--text-dim);
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.toggle input:checked + .toggle-track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(14px);
+  background: #fff;
+}
+
+.toggle-label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  transition: color 0.2s;
+}
+
+.toggle:hover .toggle-label {
+  color: var(--text-main);
+}
+
+#btn-reset {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  letter-spacing: 0.02em;
+}
+
+#btn-reset:hover {
+  border-color: var(--accent);
+  color: var(--text-main);
+  background: rgba(74, 144, 217, 0.1);
+}
+
+/* ── Legend ───────────────────────────────────────────────── */
+#legend {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 6px 24px;
+  background: var(--navy-mid);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
+.leg-group {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.leg-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 18px;
+  flex-shrink: 0;
+}
+
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+
+.leg-item svg {
+  flex-shrink: 0;
+}
+
+.leg-hint {
+  margin-left: auto;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* ── Viz canvas ───────────────────────────────────────────── */
+#viz-wrap {
+  flex: 1;
+  overflow: auto;
+  background: var(--navy);
+  padding: 20px;
+}
+
+#viz {
+  min-height: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+#viz svg {
+  display: block;
+  border-radius: 10px;
+  background: var(--canvas-bg);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.12),
+    0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* ── Error state ──────────────────────────────────────────── */
+.viz-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 300px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.viz-error .err-icon {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+.viz-error h2 {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.viz-error p {
+  font-size: 0.78rem;
+  max-width: 400px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.viz-error code {
+  font-family: var(--mono);
+  background: rgba(255,255,255,0.06);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+/* ── Tooltip ──────────────────────────────────────────────── */
+#tooltip {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  background: rgba(13, 27, 42, 0.96);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-main);
+  padding: 9px 13px;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  pointer-events: none;
+  max-width: 260px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+}
+
+#tooltip .tip-kind {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 2px;
+}
+
+#tooltip .tip-name {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-main);
+  word-break: break-all;
+}
+
+#tooltip .tip-time {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+#tooltip .tip-goal {
+  margin-top: 4px;
+  font-size: 0.7rem;
+  color: var(--gold);
+  font-weight: 500;
+}
