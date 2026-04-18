@@ -9,6 +9,7 @@
 *************************************************************************/
 
 #include "graphplan.h"
+#include "dump_json.h"
 #include <sys/time.h>
 
 /* The code consists of the following main parts.
@@ -240,11 +241,13 @@ int main(int argc, char *argv[])
     else
       printf("Can't get there from here in allotted time.\n");
   } else if (!auto_stop) {
+    dump_graph_js(max_time);
     if (DEBUG_FLAG > 0) print_info(max_time);
     if (do_plan(max_time)) print_plan(max_time);
     else print_cant_do(max_time);
   } else {
     for(; max_time <= max_auto; max_time++) {
+      dump_graph_js(max_time);
       if (DEBUG_FLAG > 0) print_info(max_time);
       /* try doing plan */
       if (do_plan(max_time)) {
