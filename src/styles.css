@@ -7,13 +7,13 @@
 
 :root {
   --navy:       #0d1b2a;
-  --navy-mid:   #1b2e42;
-  --navy-light: #253d56;
+  --navy-mid:   #172638;
+  --navy-light: #1e3146;
   --accent:     #4a90d9;
   --gold:       #f5a623;
-  --text-main:  #e8edf2;
-  --text-dim:   #8fa3b8;
-  --border:     rgba(255,255,255,0.08);
+  --text-main:  #cfd7e3;
+  --text-dim:   #6f8398;
+  --border: rgba(120, 150, 180, 0.12);
   --canvas-bg:  #0d1b2a;
   --radius:     6px;
   --mono: 'IBM Plex Mono', 'Courier New', monospace;
@@ -220,13 +220,16 @@ html, body {
   flex: 1;
   overflow: auto;
   background: var(--navy);
-  padding: 20px;
+  padding: 40px;
+  justify-content: center;
 }
 
 #viz {
-  min-height: 100%;
-  display: flex;
-  align-items: flex-start;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 #viz svg {
@@ -240,32 +243,59 @@ html, body {
 
 /* ── Error state ──────────────────────────────────────────── */
 .viz-error {
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  width: 100%;
-  min-height: 300px;
+  gap: 20px;
+  width: max-content;
+  min-height: 200px;
+  min-width: 400px;
+  padding: 10px 20px;
   color: var(--text-dim);
-  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.viz-error-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-error-body {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  text-align: left;
+}
+
+.viz-error-body p {
+  flex: 1;
+  margin: 0;
 }
 
 .viz-error .err-icon {
   font-size: 2.5rem;
   opacity: 0.4;
+  line-height: 1;
 }
 
 .viz-error h2 {
   font-family: var(--mono);
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--text-main);
   font-weight: 500;
+  margin: 0;
+  text-align: center;
 }
 
 .viz-error p {
-  font-size: 0.78rem;
-  max-width: 400px;
+  font-size: 0.9rem;
   line-height: 1.6;
   color: var(--text-dim);
 }
@@ -283,8 +313,8 @@ html, body {
   display: none;
   position: fixed;
   z-index: 9999;
-  background: rgba(13, 27, 42, 0.96);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(10, 20, 32, 0.98);
+  border: 1px solid rgba(120, 150, 180, 0.18);
   color: var(--text-main);
   padding: 9px 13px;
   border-radius: var(--radius);
@@ -322,4 +352,54 @@ html, body {
   font-size: 0.7rem;
   color: var(--gold);
   font-weight: 500;
+}
+
+
+.node.dim circle,
+.node.dim rect {
+  fill: #2a3a4d;
+  stroke: #1f2b3a;
+}
+
+.edge {
+  opacity: 1;
+}
+.edge.dim {
+  stroke: #2f3f55;
+  stroke-opacity: 0.15;
+}
+
+.mutex-arc.dim {
+  stroke: #3a3248;
+  stroke-opacity: 0.15;
+}
+
+/* ── Scrollbar styling ───────────────────── */
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: var(--accent) var(--navy-mid);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--navy-mid);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--navy-light);
+  border-radius: var(--radius);
+  border: 2px solid var(--navy-mid);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--navy-mid);
 }

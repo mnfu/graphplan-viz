@@ -7,25 +7,25 @@
 
 /* ── Colour palette ───────────────────────────────────────── */
 const C = {
-  prop:         '#2c7be5',
-  propStroke:   '#1a5cb4',
-  action:       '#e67e22',
-  actionStroke: '#b45e00',
-  noop:         '#95a5a6',
-  noopStroke:   '#6c7a7d',
-  goal:         '#f39c12',
-  goalStroke:   '#d35400',
-  textLight:    '#ffffff',
-  textDark:     '#1a1a2e',
-  pre:          '#3498db',
-  add:          '#27ae60',
-  del:          '#e74c3c',
-  mutex:        '#9b59b6',
-  colBgProp:    '#eef4ff',
-  colBgAction:  '#fff8ee',
-  colBordProp:  '#c5d8f8',
-  colBordAct:   '#f5d8aa',
-  gridLine:     '#e8ecf2',
+  prop:         '#3b6ea8',
+  propStroke:   '#274b73',
+  action:       '#8a5a2b',
+  actionStroke: '#5e3d1d',
+  noop:         '#5c6f82',
+  noopStroke:   '#3f4f5c',
+  goal:         '#b8892f',
+  goalStroke:   '#7a5e1f',
+  textLight:    '#cfd7e3',
+  textDark:     '#0d1b2a',
+  pre:          '#4a90d9',
+  add:          '#3f8f6b',
+  del:          '#a14b4b',
+  mutex:        '#6f5a8a',
+  colBgProp:   '#16263a',
+  colBgAction: '#1a2430',
+  colBordProp: '#2f4661',
+  colBordAct:  '#3a3f4a',
+  gridLine:     '#1b2a3a',
 };
 
 /* ── Module state ─────────────────────────────────────────── */
@@ -44,13 +44,18 @@ function renderGraph(data) {
   wrap.innerHTML = '';
   _selectedId = null;
 
+  const rect = wrap.getBoundingClientRect();
+  const W = rect.width || data.svgW;
+  const H = rect.height || data.svgH;
+
   /* ── SVG root ───────────────────────────────────────────── */
   _svg = d3.select('#viz')
-    .append('svg')
-    .attr('viewBox', `0 0 ${data.svgW} ${data.svgH}`)
-    .attr('width',   data.svgW)
-    .attr('height',  data.svgH)
-    .style('max-width', '100%');
+      .append('svg')
+      .attr('viewBox', `0 0 ${W} ${H}`)
+      .attr('width', W)
+      .attr('height', H)
+      .style('max-width', 'none')
+      .style('height', '100%');
 
   /* Defs: arrowhead markers */
   const defs = _svg.append('defs');
@@ -72,8 +77,8 @@ function renderGraph(data) {
 
   /* Background rect (receives zoom, also deselects on click) */
   _svg.append('rect')
-    .attr('width', data.svgW)
-    .attr('height', data.svgH)
+    .attr('width', W)
+    .attr('height', H)
     .attr('fill', 'url(#grid)')
     .on('click', () => {
       if (_selectedId) { _selectedId = null; _resetHighlight(); }
@@ -83,12 +88,12 @@ function renderGraph(data) {
   _zoom = d3.zoom()
     .scaleExtent([0.1, 5])
     .on('zoom', ev => g.attr('transform', ev.transform));
-  _svg.call(_zoom);
+  _svg.call(_zoom)
+      .on("dblclick.zoom", null);
 
   /* ── Main drawable group ─────────────────────────────────── */
   const g = _svg.append('g').attr('class', 'root');
 
-  /* Layer order: column backgrounds → edges → mutex → nodes */
   _drawColBgs(g.append('g').attr('class', 'layer-cols'), data);
   _drawEdges (g.append('g').attr('class', 'layer-edges'), data);
   _drawMutex (g.append('g').attr('class', 'layer-mutex'), data);
@@ -106,7 +111,7 @@ function _drawColBgs(g, data) {
     const t      = Math.floor(col / 2);
     const x      = CFG.pad.l + col * CFG.colW;
     const y      = CFG.pad.t - 38;
-    const h      = data.maxRows * CFG.rowH + 22;
+    const h      = data.maxRows * CFG.rowH + 38;
 
     g.append('rect')
       .attr('x', x + 4)
@@ -180,10 +185,11 @@ function _drawEdges(g, data) {
       .attr('d',             e => _bezier(data.nodeById[e.src], data.nodeById[e.tgt]))
       .attr('fill',          'none')
       .attr('stroke',        color)
+      .attr('color',         color)
       .attr('stroke-width',  1.4)
       .attr('stroke-dasharray', dash)
       .attr('marker-end',    `url(#${arrow})`)
-      .attr('opacity',       0.7);
+      .attr('opacity',       1);
   });
 }
 
@@ -223,7 +229,7 @@ function _drawMutex(g, data) {
     .attr('stroke',            C.mutex)
     .attr('stroke-width',      1.5)
     .attr('stroke-dasharray',  '4,3')
-    .attr('opacity',           0.6);
+    .attr('opacity',           1);
 }
 
 /* Quadratic bezier that bulges sideways out of the column */
@@ -262,22 +268,13 @@ function _drawNodes(g, data) {
     .attr('stroke',       d => d.isGoal ? C.goalStroke  : C.propStroke)
     .attr('stroke-width', d => d.isGoal ? 3 : 1.5);
 
-  /* Goal halo ring */
-  props.filter(d => d.isGoal)
-    .append('circle')
-    .attr('r',            CFG.propR + 5)
-    .attr('fill',         'none')
-    .attr('stroke',       C.goal)
-    .attr('stroke-width', 1)
-    .attr('opacity',      0.35);
-
   /* Label below the circle */
   props.append('text')
     .attr('text-anchor', 'middle')
     .attr('dy',          CFG.propR + 12)
     .attr('font-size',   8.5)
     .attr('font-family', "'IBM Plex Mono', monospace")
-    .attr('fill',        '#3a4a5a')
+    .attr('fill',        C.textLight)
     .text(d => _short(d.label, 16));
 
   /* ── Action / noop rectangles ─────────────────────────────── */
@@ -292,7 +289,7 @@ function _drawNodes(g, data) {
     .attr('fill',         d => d.kind === 'noop' ? C.noop        : C.action)
     .attr('stroke',       d => d.kind === 'noop' ? C.noopStroke  : C.actionStroke)
     .attr('stroke-width', d => d.kind === 'noop' ? 1 : 1.5)
-    .attr('opacity',      d => d.kind === 'noop' ? 0.82 : 1);
+    .attr('opacity',      1);
 
   acts.append('text')
     .attr('text-anchor', 'middle')
@@ -318,7 +315,6 @@ function _onNodeClick(d, data) {
   }
   _selectedId = d.id;
 
-  /* Build sets of related ids */
   const adj = data.adjacency[d.id] || new Set();
 
   const mxPartners = new Set();
@@ -327,27 +323,42 @@ function _onNodeClick(d, data) {
     if (b === d.id) mxPartners.add(a);
   });
 
-  /* Fade everything first */
-  d3.selectAll('.node')    .attr('opacity', n =>
-    n.id === d.id || adj.has(n.id) || mxPartners.has(n.id) ? 1 : 0.10);
-  d3.selectAll('.edge')    .attr('opacity', 0.04);
-  d3.selectAll('.mutex-arc').attr('opacity', 0.04);
+  /* Nodes */
+  d3.selectAll('.node').classed('dim', n =>
+      !(n.id === d.id || adj.has(n.id) || mxPartners.has(n.id)));
 
-  /* Re-show edges touching the selected node */
-  d3.selectAll('.edge')
-    .filter(e => e.src === d.id || e.tgt === d.id)
-    .attr('opacity', 0.9);
+  /* Edges */
+  d3.selectAll('.edge').classed('dim', e =>
+      !(e.src === d.id || e.tgt === d.id))
+      .each(function (e) {
+    const el = d3.select(this);
 
-  /* Re-show mutex arcs touching the selected node */
-  d3.selectAll('.mutex-arc')
-    .filter(p => p.a === d.id || p.b === d.id)
-    .attr('opacity', 1);
+    const isActive = (e.src === d.id || e.tgt === d.id);
+
+    const base = e.etype; // 'pre' | 'add' | 'del'
+
+    el.attr(
+        'marker-end',
+        `url(#arr-${base}${isActive ? '' : '-dim'})`
+    );
+  });
+
+  /* Mutex */
+  d3.selectAll('.mutex-arc').classed('dim', p =>
+      !(p.a === d.id || p.b === d.id));
 }
 
 function _resetHighlight() {
-  d3.selectAll('.node')    .attr('opacity', 1);
-  d3.selectAll('.edge')    .attr('opacity', 0.7);
-  d3.selectAll('.mutex-arc').attr('opacity', 0.6);
+  _selectedId = null;
+
+  d3.selectAll('.node').classed('dim', false);
+  d3.selectAll('.edge')
+      .classed('dim', false)
+      .each(function (e) {
+        d3.select(this)
+            .attr('marker-end', `url(#arr-${e.etype})`);
+      })
+  d3.selectAll('.mutex-arc').classed('dim', false);
 }
 
 /* ── Tooltip ──────────────────────────────────────────────── */
@@ -379,29 +390,66 @@ function _hideTip() {
   document.getElementById('tooltip').style.display = 'none';
 }
 
-/* ── Controls ─────────────────────────────────────────────── */
+// ── Persistent toggle state ──────────────────────────────
+const persistentToggles = {
+  noops: true,
+  del:   true,
+  mutex: true
+};
+
+// ── Setup controls with persistent tracking ──────────────
 function _setupControls(data) {
+  const chkNoops = document.getElementById('chk-noops');
+  const chkDel   = document.getElementById('chk-del');
+  const chkMutex = document.getElementById('chk-mutex');
 
-  /* Show / hide no-op nodes and edges that touch them */
-  document.getElementById('chk-noops').addEventListener('change', function () {
-    const show = this.checked;
-    d3.selectAll('.node-noop').attr('display', show ? null : 'none');
-    d3.selectAll('.edge').filter(e => {
-      const s = data.nodeById[e.src];
-      const t = data.nodeById[e.tgt];
-      return (s && s.kind === 'noop') || (t && t.kind === 'noop');
-    }).attr('display', show ? null : 'none');
+  // Initialize checkboxes from persistent state
+  chkNoops.checked = persistentToggles.noops;
+  chkDel.checked   = persistentToggles.del;
+  chkMutex.checked = persistentToggles.mutex;
+
+  // Event listeners update persistent state AND UI
+  chkNoops.addEventListener('change', function () {
+    persistentToggles.noops = this.checked;
+    _applyNoopToggle(data);
+  });
+  chkDel.addEventListener('change', function () {
+    persistentToggles.del = this.checked;
+    _applyDelToggle();
+  });
+  chkMutex.addEventListener('change', function () {
+    persistentToggles.mutex = this.checked;
+    _applyMutexToggle();
   });
 
-  /* Show / hide delete-effect edges */
-  document.getElementById('chk-del').addEventListener('change', function () {
-    d3.selectAll('.e-del').attr('display', this.checked ? null : 'none');
-  });
+  // Apply initial toggle state to freshly rendered graph
+  _applyNoopToggle(data);
+  _applyDelToggle();
+  _applyMutexToggle();
+}
 
-  /* Show / hide mutex arcs */
-  document.getElementById('chk-mutex').addEventListener('change', function () {
-    d3.selectAll('.mutex-arc').attr('display', this.checked ? null : 'none');
-  });
+// ── Toggle application helpers ──────────────────────────
+function _applyNoopToggle(data) {
+  const show = persistentToggles.noops;
+  d3.selectAll('.node-noop').attr('display', show ? null : 'none');
+  d3.selectAll('.mutex-arc').filter(p => {
+    const a = data.nodeById[p.a];
+    const b = data.nodeById[p.b];
+    return (a && a.kind === 'noop') || (b && b.kind === 'noop');
+  }).attr('display', show ? null : 'none');
+  d3.selectAll('.edge').filter(e => {
+    const s = data.nodeById[e.src];
+    const t = data.nodeById[e.tgt];
+    return (s && s.kind === 'noop') || (t && t.kind === 'noop');
+  }).attr('display', show ? null : 'none');
+}
+
+function _applyDelToggle() {
+  d3.selectAll('.e-del').attr('display', persistentToggles.del ? null : 'none');
+}
+
+function _applyMutexToggle() {
+  d3.selectAll('.mutex-arc').attr('display', persistentToggles.mutex ? null : 'none');
 }
 
 function _resetView() {

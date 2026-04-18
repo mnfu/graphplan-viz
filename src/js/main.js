@@ -21,21 +21,36 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const data = processData(GRAPH_DATA);
   renderGraph(data);
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      renderGraph(data);
+    }, 50);
+  });
 });
 
 function _showError(msg) {
   const wrap = document.getElementById('viz');
   wrap.innerHTML = `
     <div class="viz-error">
-      <div class="err-icon">⬡</div>
-      <h2>graph_data.js not found</h2>
-      <p>
-        ${msg || 'Run graphplan on your domain to generate the data file, then place it next to <code>index.html</code>.'}
-      </p>
-      <p>
-        Quick start with the rocket domain:<br>
-        <code>./graphplan -o rocket_ops -f rocket_facts1 -t 3 -d</code><br>
-        then copy <code>graph_data.js</code> here.
-      </p>
+      
+      <div class="viz-error-header">
+        <div class="err-icon">⬡</div>
+        <h2>graph_data.js not found</h2>
+      </div>
+
+      <div class="viz-error-body">
+        <p>
+          ${msg || 'Run graphplan on your domain to generate the <code>graph_data.js</code> file, ensure it is in the same directory as <code>index.html</code>.'}
+        </p>
+
+        <p>
+          Quick start with the rocket domain:<br>
+          <code>./graphplan -o rocket_ops -f rocket_facts2 -t 3 -d</code><br>
+          ensure <code>rocket_ops</code> and <code>rocket_facts2</code> arguments match their location in the filesystem.
+        </p>
+      </div>
+
     </div>`;
 }
