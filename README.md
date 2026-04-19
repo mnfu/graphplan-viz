@@ -1,6 +1,9 @@
 # Graphplan Visualizer
 A local visualizer for the original Graphplan algorithm. Collects data from the original 1997 C code and renders it in the browser.
 
+There is github pages demo that uses data generated from `rocket_ops` and `rocket_facts2`:
+https://mnfu.github.io/graphplan-viz/
+
 ---
 
 ## Requirements
