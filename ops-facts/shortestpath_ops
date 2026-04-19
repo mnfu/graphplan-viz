@@ -1,6 +1,0 @@
-(operator
- MOVE
- (params (<start> <end> CONNECTED))
- (preconds  (at <start>))
- (effects   (at <end>) (del at <start>)))
-
