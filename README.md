@@ -8,7 +8,7 @@ A local visualizer for the original Graphplan algorithm. Collects data from the 
 This project expects a **Linux-like environment**.
 
 * On Linux/macOS: you're likely good to go
-* On Windows: use Windows Subsystem for Linux (WSL) and run all commands inside it
+* On Windows: WSL is recommended (other Unix-like environments may work)
 
 ---
 
@@ -26,35 +26,37 @@ make
 
 You’ll need ops and facts files to run Graphplan.
 
-You can download sample inputs from the original CMU source:
+There are quite a few samples to be found in the `ops-facts` directory.
+If you want more, there are a few more available at the original CMU source that I did not put in this directory:
 https://www.cs.cmu.edu/afs/cs.cmu.edu/usr/avrim/Planning/Graphplan/
 
-For example:
+For example, one may pick the following ops & facts:
 
 * `rocket_ops`
 * `rocket_facts2`
 
-Run Graphplan like this:
+Using the `ops-facts` directory, you run Graphplan like this:
 
 ```bash
-./graphplan -o rocket_ops -f rocket_facts2 -d
+./graphplan -o ../ops-facts/rocket_ops -f ../ops-facts/rocket_facts2 -d
 ```
 
 ### What this does
 
 * Executes Graphplan with default values (`-d`)
-* Generates a `graph_data.js` file as a side effect
+* Generates the `graph_data.js` and `search_trace.js` files we need for visualization
 
 ---
 
 ## Viewing the Visualization
 
-Once `graph_data.js` is generated:
+Once `graph_data.js` is generated (technically `search_trace.js` is optional):
 
 1. Open `index.html` in your browser
 2. The graph will render automatically
 
-If no `graph_data.js` is present, the UI will still load, but no graph will be displayed.
+If no `graph_data.js` is present, the UI will present an error message.\
+If no `search_trace.js` is present, the `Search replay` toggle will do nothing.
 
 ---
 
@@ -90,14 +92,20 @@ If you experience performance issues (especially with large graphs), try the fol
 
 ## Examples (1080p)
 
-### With `rocket_ops` + `rocket_facts2` 
+### With `rocket_ops` + `rocket_facts2` (Planning Graph)
 
-<img width="1920" height="1080" alt="example graph" src="https://github.com/user-attachments/assets/8b8f564e-50d0-4d50-bf94-9afc99e495d7" />
+<img width="1920" height="1080" alt="rocket domain - planning graph" src="https://github.com/user-attachments/assets/fbd192c2-08be-425b-b536-35739bd26560" />
 
+---
+### With `rocket_ops` + `rocket_facts2` (Backward Search)
+
+<img width="1920" height="1080" alt="rocket domain - backward search" src="https://github.com/user-attachments/assets/01165f20-c0f0-4e17-8f58-8dda483cd9c5" />
+<img width="1920" height="1080" alt="rocket domain - backward search - plan found" src="https://github.com/user-attachments/assets/6c66580c-3040-4f35-a711-dd0d06250e9f" />
 
 ---
 
 ### No `graph_data.js` (empty state)
 
-<img width="1920" height="1080" alt="empty state" src="https://github.com/user-attachments/assets/5db6aeb9-1b98-41e4-a98e-38e0b3ef3171" />
+<img width="1920" height="1080" alt="no domain present" src="https://github.com/user-attachments/assets/e7bd4b1d-e959-4563-9a7c-517798d6e5be" />
+
 
