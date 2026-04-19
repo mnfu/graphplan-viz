@@ -1,0 +1,30 @@
+Here, we've defined rockets to be cargo too....
+
+(London PLACE)
+(Paris PLACE)
+(JFK PLACE)
+(r1 ROCKET)
+(r2 ROCKET)
+(r1 CARGO)
+(r2 CARGO)
+(jason CARGO)
+(mxf CARGO)
+(avrim CARGO)
+(alex CARGO)
+
+(preconds
+(at r1 London)
+(at r2 London)
+(at mxf London)
+(at jason London)
+(at avrim JFK)
+(at alex JFK)
+(has-fuel r1)
+(has-fuel r2))
+
+(effects
+(at mxf Paris)  
+(at avrim Paris)
+(at jason Paris)
+(at alex Paris))
+

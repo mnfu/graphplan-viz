@@ -1,0 +1,10 @@
+From UCPOP [which they got from Prodify]. 
+(p1)
+(p2)
+(p3)
+(p4)
+
+(preconds (at monkey p1)(on-floor)(at box p2)(at bananas p3)
+	    (at knife p4))
+
+(effects (hasbananas))

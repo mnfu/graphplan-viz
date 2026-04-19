@@ -1,0 +1,46 @@
+From UCPOP [which they got from Prodigy].  Note: there is no operator 
+to get back down from a box...
+
+(operator 
+ GOTO
+ (params (<x>) (<y>))
+ (preconds (on-floor) (at monkey <y>))
+ (effect (del at monkey <y>) (at monkey <x>)))
+
+(operator
+ CLIMB
+ (params (<x>))
+ (preconds (at box <x>) (at monkey <x>))
+ (effects (onbox <x>) (del on-floor)))
+
+(operator
+ PUSH-BOX
+ (params (<x>) (<y>))
+ (preconds (at box <y>) (at monkey <y>) (on-floor))
+ (effects (at monkey <x>) (at box <x>) (del at monkey <y>) (del at box <y>)))
+
+(operator
+ GET-KNIFE
+ (params (<y>))
+ (preconds (at knife <y>) (at monkey <y>))
+ (effects (hasknife) (del at knife <y>)))
+
+(operator
+ GRAB-BANANAS
+ (params (<y>))
+ (preconds (hasknife) (at bananas <y>) (onbox <y>))
+ (effects (hasbananas)))
+
+(operator 
+ PICKGLASS
+ (params (<y>))
+ (preconds (at glass <y>) (at monkey <y>))
+ (effects (hasglass) (del at glass <y>)))
+  
+(operator 
+ GETWATER
+ (params (<y>))
+ (preconds (hasglass) (at waterfountain <y>) (at monkey <y>)  (onbox <y>))
+ (effects (haswater)))
+
+      

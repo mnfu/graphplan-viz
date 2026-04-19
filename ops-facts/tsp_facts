@@ -1,0 +1,27 @@
+In this one, all roads are two way except the road from Toronto to
+Pittsburgh is one-way.
+
+(Boston NewYork CONNECTED)
+(NewYork Boston CONNECTED)
+(Pittsburgh Boston CONNECTED)
+(Boston Pittsburgh CONNECTED)
+(Pittsburgh NewYork CONNECTED)
+(NewYork Pittsburgh CONNECTED)
+(Toronto Pittsburgh CONNECTED)
+(Toronto NewYork CONNECTED)
+(NewYork Toronto CONNECTED)
+(NewYork Albany CONNECTED)
+(Albany NewYork CONNECTED)
+(Albany Toronto CONNECTED)
+(Toronto Albany CONNECTED)
+
+(preconds (at truck Pittsburgh))
+
+(effects (visited Boston)
+	(visited NewYork)
+	(visited Pittsburgh)
+	(visited Toronto)
+	(visited Albany)
+	(at truck Pittsburgh))
+
+	

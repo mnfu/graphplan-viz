@@ -1,0 +1,47 @@
+Note: everthing before first left parenthesis is treated as a comment.
+10 objects to be transported
+
+(London PLACE)
+(Paris PLACE)
+(JFK PLACE)
+(r1 ROCKET)
+(r2 ROCKET)
+(mxf CARGO)
+(avrim CARGO)
+(alex CARGO)
+(jason CARGO)
+(pencil CARGO)
+(paper CARGO)
+(april CARGO)
+(michelle CARGO)
+(betty CARGO)
+(lisa CARGO)
+
+(preconds
+(at r1 London)
+(at r2 London)
+(at mxf London)
+(at avrim London)
+(at alex London)
+(at jason London)
+(at pencil London)
+(at paper London)
+(has-fuel r1)
+(has-fuel r2)
+(at michelle London)
+(at april London)
+(at betty London)
+(at lisa London))
+
+(effects
+(at mxf Paris)  
+(at pencil JFK)
+(at april Paris)
+(at avrim JFK)
+(at lisa Paris)
+(at michelle JFK)
+(at jason Paris)
+(at alex JFK)
+(at paper Paris)
+(at betty JFK))
+

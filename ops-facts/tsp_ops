@@ -1,0 +1,8 @@
+#
+
+(operator
+ MOVE
+ (params (<start> <end> CONNECTED))
+ (preconds  (at truck <start>))
+ (effects   (at truck <end>) (visited <end>)))
+

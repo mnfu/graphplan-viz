@@ -1,0 +1,45 @@
+Note: everthing before first left parenthesis is treated as a comment.
+This problem hs 2 rockets and fuel is treated as a cargo that must be
+loaded into a rocket for it to fire.
+
+(London PLACE)
+(Pgh PLACE)
+(JFK PLACE)
+(r1 ROCKET)
+(r2 ROCKET)
+(Kippers CARGO)
+(mxf CARGO)
+(avrim CARGO)
+(x4 CARGO)
+(x5 CARGO)
+(x6 CARGO)
+(x7 CARGO)
+(x8 CARGO)
+(x9 CARGO)
+(f1 CARGO)
+(f2 CARGO)
+(f1 FUEL)
+(f2 FUEL)
+
+(preconds
+(at r1 London)
+(at r2 London)
+(at mxf London)
+(at Kippers London)
+(at avrim London)
+(at f1 London)
+(at f2 London)
+(at x4 London)
+(at x5 London)
+(at x6 London)
+(at x7 London)
+(at x8 London)
+(at x9 London))
+
+(effects
+(at mxf Pgh)  
+(at avrim Pgh)
+(at Kippers Pgh)
+(at x5 JFK)
+(at x8 JFK)
+(at x9 JFK))

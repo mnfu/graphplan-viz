@@ -1,0 +1,98 @@
+TSP on a complete graph. Would be easy for any normal planner, but hard for 
+graphplan because it doesn't realize you can't visit n nodes in fewer
+than n steps. [even though it does know that it can only do one action in
+each time step and each action only satsifies up to one of the
+"visited" goals, this info isn't used in any useful way.] The "L" lowerbounding
+option tells graphplan to explicitly use this kind of reasoning. Specifically,
+if you have a "clique" of t goals [maximal clique found greedily] such that
+no two in the clique can be solved in the same step, then reason that
+you will need at least t steps.  This option make it run LOTS faster.
+
+(A B CONNECTED)
+(A C CONNECTED)
+(A D CONNECTED)
+(A E CONNECTED)
+(A F CONNECTED)
+(A G CONNECTED)
+(A H CONNECTED)
+(A I CONNECTED)
+
+(B A CONNECTED)
+(B C CONNECTED)
+(B D CONNECTED)
+(B E CONNECTED)
+(B F CONNECTED)
+(B G CONNECTED)
+(B H CONNECTED)
+(B I CONNECTED)
+
+(C A CONNECTED)
+(C B CONNECTED)
+(C D CONNECTED)
+(C E CONNECTED)
+(C F CONNECTED)
+(C G CONNECTED)
+(C H CONNECTED)
+(C I CONNECTED)
+
+(D A CONNECTED)
+(D B CONNECTED)
+(D C CONNECTED)
+(D E CONNECTED)
+(D F CONNECTED)
+(D G CONNECTED)
+(D H CONNECTED)
+(D I CONNECTED)
+
+(E A CONNECTED)
+(E B CONNECTED)
+(E C CONNECTED)
+(E D CONNECTED)
+(E F CONNECTED)
+(E G CONNECTED)
+(E H CONNECTED)
+(E I CONNECTED)
+
+(F A CONNECTED)
+(F B CONNECTED)
+(F C CONNECTED)
+(F D CONNECTED)
+(F E CONNECTED)
+(F G CONNECTED)
+(F H CONNECTED)
+(F I CONNECTED)
+
+(G A CONNECTED)
+(G B CONNECTED)
+(G C CONNECTED)
+(G D CONNECTED)
+(G E CONNECTED)
+(G F CONNECTED)
+(G H CONNECTED)
+(G I CONNECTED)
+
+(H A CONNECTED)
+(H B CONNECTED)
+(H C CONNECTED)
+(H D CONNECTED)
+(H E CONNECTED)
+(H F CONNECTED)
+(H G CONNECTED)
+(H I CONNECTED)
+
+(I A CONNECTED)
+(I B CONNECTED)
+(I C CONNECTED)
+(I D CONNECTED)
+(I E CONNECTED)
+(I F CONNECTED)
+(I G CONNECTED)
+(I H CONNECTED)
+
+(preconds (at truck A))
+
+(effects (at truck A) (visited A) (visited B) (visited C) (visited D) 
+(visited E) (visited F) (visited G) (visited H) (visited I))
+
+
+	

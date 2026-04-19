@@ -1,0 +1,18 @@
+(operator
+ XMOVE
+ (params
+  (<object> CARGO) (<vehicle> VEHICLE))
+ (preconds 
+  (usable <vehicle>) (at <object> START))
+ (effects 
+  (del usable <vehicle>) (del at <object> START) (at <object> X)))
+
+(operator
+ YMOVE
+ (params
+  (<object> CARGO) (<vehicle> VEHICLE) (<vehicle> MULTIUSE))
+ (preconds 
+  (usable <vehicle>) (at <object> START))
+ (effects 
+  (del usable <vehicle>) (del at <object> START) (at <object> Y)))
+

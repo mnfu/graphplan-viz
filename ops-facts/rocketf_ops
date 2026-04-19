@@ -1,0 +1,31 @@
+# old-style
+Note: everthing before first left parenthesis is treated as a comment.
+This domain is the rocket domain where [1] fuel is a cargo that must
+be loaded into a rocket for it to run, and [2] there may be multiple
+rockets. 
+
+(operator
+ LOAD
+ (params
+  (<object> CARGO) (<rocket> ROCKET) (<place> PLACE))
+ (preconds 
+  (at <rocket> <place>)  (at <object> <place>))
+ (effects 
+  (at <rocket> <place>) (in <rocket> <object>)))
+
+(operator
+ UNLOAD
+ (params
+  (<object> CARGO) (<rocket> ROCKET) (<place>  PLACE))
+ (preconds 
+  (at <rocket> <place>)  (in <rocket> <object>))
+ (effects 
+  (at <rocket> <place>) (at <object> <place>)))
+
+(operator
+ MOVE
+ (params
+  (<rocket> ROCKET) (<fuel> FUEL) (<place1> PLACE) (<place2> PLACE))
+ (preconds (in <rocket> <fuel>) (at <rocket> <place1>))
+ (effects  (at <rocket> <place2>)))
+
