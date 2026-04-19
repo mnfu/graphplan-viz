@@ -1,8 +1,10 @@
 CC	=gcc -g2
 FLAGS	= -Wall -ansi
 
-graphplan: y.tab.o lex.yy.o graphplan.o utilities.o hash.o planner.o dummy.o dump_json.o
-	$(CC) $(FLAGS) lex.yy.o y.tab.o hash.o utilities.o graphplan.o planner.o dummy.o dump_json.o -o graphplan
+graphplan: y.tab.o lex.yy.o graphplan.o utilities.o hash.o planner.o dummy.o dump_json.o dump_search.o
+	$(CC) $(FLAGS) lex.yy.o y.tab.o hash.o utilities.o graphplan.o planner.o dummy.o dump_json.o dump_search.o -o graphplan
+
+dump_search.o: dump_search.c dump_search.h graphplan.h
 
 dump_json.o: graphplan.h dump_json.h
 
@@ -18,4 +20,4 @@ graphplan.o: graphplan.h
 
 utilities.o: graphplan.h
 
-planner.o: graphplan.h
+planner.o: graphplan.h dump_search.h

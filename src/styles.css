@@ -82,6 +82,11 @@ html, body {
   margin-top: 1px;
 }
 
+#subtitle a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 /* ── Controls ─────────────────────────────────────────────── */
 #controls {
   display: flex;
@@ -403,3 +408,207 @@ html, body {
 ::-webkit-scrollbar-corner {
   background: var(--navy-mid);
 }
+
+/* ── Animation bar ───────────────────────────────────────── */
+#anim-bar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  height: 48px;
+  background: var(--navy-mid);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+#anim-bar.anim-bar--visible {
+  display: flex;
+}
+
+/* Step buttons */
+.sa-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.sa-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-main);
+  background: rgba(74,144,217,0.1);
+}
+.sa-btn-play {
+  padding: 4px 14px;
+  font-size: 0.9rem;
+}
+
+/* Step counter */
+#sa-counter {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  min-width: 80px;
+}
+
+/* Scrubber — takes all remaining space */
+#sa-scrub {
+  flex: 1;
+  min-width: 60px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Right group */
+#anim-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Speed slider */
+#sa-speed {
+  width: 72px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.sa-speed-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+/* Status text */
+#sa-status {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  min-width: 400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.15s;
+}
+#sa-status[data-kind="ok"]     { color: #4caf82; }
+#sa-status[data-kind="fail"]   { color: #c45454; }
+#sa-status[data-kind="warn"]   { color: #c4843a; }
+#sa-status[data-kind="reject"] { color: #c45454; }
+#sa-status[data-kind="try"]    { color: #c4b03a; }
+#sa-status[data-kind="info"]   { color: var(--accent); }
+
+/* ── Topbar separator ────────────────────────────────────── */
+.ctrl-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ── Search-overlay node classes ─────────────────────────── */
+/*
+ * SVG presentation attributes (fill=, stroke=) have lower specificity
+ * than CSS class rules, so these cleanly override graph.js colours.
+ *
+ * Priority stack (highest → lowest):
+ *   sa-mutex / sa-cutoff  >  sa-tried  >  sa-selected
+ *   >  sa-goal  >  sa-for-goal  >  sa-dim
+ */
+
+/* Active goal: gold ring */
+.node.sa-goal circle {
+  fill:   #c49a28;
+  stroke: #8a6a14;
+  stroke-width: 3;
+}
+.node.sa-goal rect {
+  /* goals are always props; rect rule is a safe fallback */
+  fill:   #c49a28;
+  stroke: #8a6a14;
+}
+
+/* Currently being tried: muted amber */
+.node.sa-tried rect {
+  fill:   #7a6820;
+  stroke: #5a4c14;
+  stroke-width: 2;
+}
+.node.sa-tried circle {
+  fill:   #7a6820;
+  stroke: #5a4c14;
+  stroke-width: 2;
+}
+
+/* Committed (selected or in solution): emerald */
+.node.sa-selected rect {
+  fill:   #1e6040;
+  stroke: #14432c;
+  stroke-width: 2;
+}
+.node.sa-selected circle {
+  fill:   #1e6040;
+  stroke: #14432c;
+  stroke-width: 2;
+}
+
+/* Mutex-rejected: crimson */
+.node.sa-mutex rect {
+  fill:   #6e1e1e;
+  stroke: #501414;
+  stroke-width: 2;
+}
+
+/* Cutoff-rejected: burnt orange */
+.node.sa-cutoff rect {
+  fill:   #6e3a10;
+  stroke: #502808;
+  stroke-width: 2;
+}
+
+/* The prop that is the current "target" of a try */
+.node.sa-for-goal circle {
+  fill:   #2a4060;
+  stroke: #3a5880;
+  stroke-width: 2.5;
+  stroke-dasharray: 4 2;
+}
+
+/* Failure state: everything dims with a red tint */
+.node.sa-failure circle,
+.node.sa-failure rect {
+  fill:   #2a1818;
+  stroke: #3a1c1c;
+  opacity: 0.6;
+}
+
+/* Dim: everything else during active search */
+.node.sa-dim circle,
+.node.sa-dim rect {
+  fill:   #141d28;
+  stroke: #0f1620;
+  opacity: 0.35;
+}
+
+/* ── Search-overlay edge classes ─────────────────────────── */
+.edge.sa-edge-active {
+  stroke-width: 2.2;
+  opacity: 1;
+}
+
+.edge.sa-edge-dim {
+  opacity: 0.06;
+}
+
+/* ── Search-overlay mutex-arc class ─────────────────────── */
+.mutex-arc.sa-arc-dim {
+  opacity: 0.05;
+}
+

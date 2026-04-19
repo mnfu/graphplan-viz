@@ -1,112 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Graphplan Visualizer</title>
-  <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230d1b2a'/><text x='50' y='85' font-size='100' text-anchor='middle' fill='%234a90d9'>⬡</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap"
+          rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div id="app">
 
-  <!-- ── App Shell ──────────────────────────────────────────── -->
-  <div id="app">
+  <!-- ── Top bar ─────────────────────────────────────────── -->
+  <header id="topbar">
 
-    <header id="topbar">
-      <div id="title-block">
-        <span id="logo">⬡</span>
-        <div>
-          <h1>Graphplan</h1>
-          <p id="subtitle">Planning Graph Visualizer — Blum &amp; Furst 1997</p>
+    <div id="title-block">
+      <div id="logo">⬡</div>
+      <div>
+        <h1>Graphplan Visualizer</h1>
+        <div id="subtitle">
+          planning graph · backward search — implementation adapted from
+          <a href="https://www.cs.cmu.edu/~avrim/graphplan.html" target="_blank" rel="noopener noreferrer">
+            Blum &amp; Furst (1997)
+          </a>
         </div>
       </div>
-
-      <nav id="controls">
-        <label class="toggle">
-          <input type="checkbox" id="chk-noops" checked />
-          <span class="toggle-track"></span>
-          <span class="toggle-label">No-ops</span>
-        </label>
-        <label class="toggle">
-          <input type="checkbox" id="chk-del" checked />
-          <span class="toggle-track"></span>
-          <span class="toggle-label">Delete edges</span>
-        </label>
-        <label class="toggle">
-          <input type="checkbox" id="chk-mutex" checked />
-          <span class="toggle-track"></span>
-          <span class="toggle-label">Mutex arcs</span>
-        </label>
-        <button id="btn-reset">↺ Reset</button>
-      </nav>
-    </header>
-
-    <!-- ── Legend ─────────────────────────────────────────────── -->
-    <div id="legend">
-      <div class="leg-group">
-        <span class="leg-item">
-          <svg width="22" height="22"><circle cx="11" cy="11" r="8" fill="#2c7be5" stroke="#1a5cb4" stroke-width="1.5"/></svg>
-          Proposition
-        </span>
-        <span class="leg-item">
-          <svg width="22" height="22"><circle cx="11" cy="11" r="8" fill="#f39c12" stroke="#d35400" stroke-width="2.5"/></svg>
-          Goal
-        </span>
-        <span class="leg-item">
-          <svg width="32" height="22"><rect x="2" y="5" width="28" height="12" rx="3" fill="#e67e22" stroke="#b45e00" stroke-width="1.5"/></svg>
-          Action
-        </span>
-        <span class="leg-item">
-          <svg width="32" height="22"><rect x="2" y="5" width="28" height="12" rx="3" fill="#95a5a6" stroke="#717d7e" stroke-width="1.5"/></svg>
-          No-op
-        </span>
-      </div>
-      <div class="leg-sep"></div>
-      <div class="leg-group">
-        <span class="leg-item">
-          <svg width="36" height="12"><line x1="0" y1="6" x2="36" y2="6" stroke="#3498db" stroke-width="2"/><polygon points="30,2 36,6 30,10" fill="#3498db"/></svg>
-          Precondition
-        </span>
-        <span class="leg-item">
-          <svg width="36" height="12"><line x1="0" y1="6" x2="36" y2="6" stroke="#27ae60" stroke-width="2"/><polygon points="30,2 36,6 30,10" fill="#27ae60"/></svg>
-          Add effect
-        </span>
-        <span class="leg-item">
-          <svg width="36" height="12"><line x1="0" y1="6" x2="36" y2="6" stroke="#e74c3c" stroke-width="2" stroke-dasharray="5,3"/><polygon points="30,2 36,6 30,10" fill="#e74c3c"/></svg>
-          Delete effect
-        </span>
-        <span class="leg-item">
-          <svg width="36" height="12"><path d="M0,10 Q18,-2 36,10" stroke="#9b59b6" stroke-width="2" fill="none" stroke-dasharray="4,3"/></svg>
-          Mutex
-        </span>
-      </div>
-      <div class="leg-hint">Click any node to highlight its connections.</div>
     </div>
 
-    <!-- ── Visualization canvas ──────────────────────────────── -->
-    <main id="viz-wrap">
-      <div id="viz"></div>
-    </main>
+    <div id="controls">
+
+      <!-- Graph display toggles -->
+      <label class="toggle">
+        <input type="checkbox" id="chk-noops" checked>
+        <span class="toggle-track"></span>
+        <span class="toggle-label">Noops</span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="chk-del" checked>
+        <span class="toggle-track"></span>
+        <span class="toggle-label">Delete edges</span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="chk-mutex" checked>
+        <span class="toggle-track"></span>
+        <span class="toggle-label">Mutex arcs</span>
+      </label>
+
+      <div class="ctrl-sep"></div>
+
+      <!-- Search replay toggle (hidden by search_anim.js if no trace) -->
+      <div id="search-toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="chk-search">
+          <span class="toggle-track"></span>
+          <span class="toggle-label">Search replay</span>
+        </label>
+      </div>
+
+      <button id="btn-reset">Reset view</button>
+    </div>
+  </header>
+
+  <!-- ── Animation bar (hidden until search replay is enabled) ── -->
+  <!--
+    JS adds/removes .anim-bar--visible to toggle display.
+    Keyboard shortcuts: ← / → to step, Space to play/pause.
+  -->
+  <div id="anim-bar">
+
+    <div id="anim-left">
+      <button class="sa-btn"          id="sa-prev"  title="Step back (← or h)">←</button>
+      <button class="sa-btn sa-btn-play" id="sa-play" title="Play / Pause (Space)">▶</button>
+      <button class="sa-btn"          id="sa-next"  title="Step forward (→ or l)">→</button>
+      <span id="sa-counter">— / —</span>
+    </div>
+
+    <!-- Full-width scrubber to jump to any step -->
+    <input type="range" id="sa-scrub" min="0" value="0" title="Jump to step">
+
+    <div id="anim-right">
+      <span id="sa-status" data-kind=""></span>
+      <span class="sa-speed-label">Speed</span>
+      <input type="range" id="sa-speed" min="0" max="9" value="4" title="Playback speed">
+    </div>
 
   </div>
 
-  <!-- ── Tooltip ───────────────────────────────────────────────── -->
-  <div id="tooltip" role="tooltip" aria-hidden="true"></div>
+  <!-- ── Legend bar ──────────────────────────────────────── -->
+  <div id="legend">
 
-  <!-- ── Scripts ──────────────────────────────────────────────── -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-  <!--
-    graph_data.js is generated by graphplan
-    If it is missing you will see an error message in the viz panel.
-  -->
-  <script src="graph_data.js" onerror="window.__dataLoadFailed=true"></script>
-  <script src="js/data.js"></script>
-  <script src="js/graph.js"></script>
-  <script src="js/main.js"></script>
+    <div class="leg-group">
+      <div class="leg-item">
+        <svg width="14" height="14">
+          <circle cx="7" cy="7" r="6" fill="#3b6ea8" stroke="#274b73" stroke-width="1.5"/>
+        </svg>
+        Proposition
+      </div>
+      <div class="leg-item">
+        <svg width="14" height="14">
+          <circle cx="7" cy="7" r="6" fill="#b8892f" stroke="#7a5e1f" stroke-width="2"/>
+        </svg>
+        Goal
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="14">
+          <rect x="1" y="3" width="20" height="8" rx="2" fill="#8a5a2b" stroke="#5e3d1d" stroke-width="1.5"/>
+        </svg>
+        Action
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="14">
+          <rect x="1" y="3" width="20" height="8" rx="2" fill="#5c6f82" stroke="#3f4f5c" stroke-width="1"/>
+        </svg>
+        No-op
+      </div>
+    </div>
+
+    <div class="leg-sep"></div>
+
+    <div class="leg-group">
+      <div class="leg-item">
+        <svg width="30" height="14">
+          <line x1="0" y1="7" x2="23" y2="7" stroke="#4a90d9" stroke-width="1.5"/>
+          <polygon points="23,3 30,7 23,11" fill="#4a90d9"/>
+        </svg>
+        Precondition
+      </div>
+      <div class="leg-item">
+        <svg width="30" height="14">
+          <line x1="0" y1="7" x2="23" y2="7" stroke="#3f8f6b" stroke-width="1.5"/>
+          <polygon points="23,3 30,7 23,11" fill="#3f8f6b"/>
+        </svg>
+        Add effect
+      </div>
+      <div class="leg-item">
+        <svg width="30" height="14">
+          <line x1="0" y1="7" x2="23" y2="7" stroke="#a14b4b" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <polygon points="23,3 30,7 23,11" fill="#a14b4b"/>
+        </svg>
+        Delete effect
+      </div>
+      <div class="leg-item">
+        <svg width="30" height="14">
+          <path d="M2,4 Q15,14 28,4" fill="none" stroke="#6f5a8a" stroke-width="1.5" stroke-dasharray="4,2"/>
+        </svg>
+        Mutex
+      </div>
+    </div>
+
+    <div class="leg-sep"></div>
+
+    <!-- Search legend items — only visible when search replay is on -->
+    <div class="leg-group" id="search-legend" style="display:none">
+      <div class="leg-item">
+        <svg width="14" height="14">
+          <circle cx="7" cy="7" r="6" fill="#c49a28" stroke="#8a6a14" stroke-width="2.5"/>
+        </svg>
+        Active goal
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="14">
+          <rect x="1" y="3" width="20" height="8" rx="2" fill="#1e6040" stroke="#14432c" stroke-width="2"/>
+        </svg>
+        Committed
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="14">
+          <rect x="1" y="3" width="20" height="8" rx="2" fill="#7a6820" stroke="#5a4c14" stroke-width="2"/>
+        </svg>
+        Trying
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="14">
+          <rect x="1" y="3" width="20" height="8" rx="2" fill="#6e1e1e" stroke="#501414" stroke-width="2"/>
+        </svg>
+        Mutex ✗
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="14">
+          <rect x="1" y="3" width="20" height="8" rx="2" fill="#6e3a10" stroke="#502808" stroke-width="2"/>
+        </svg>
+        Cutoff ✗
+      </div>
+    </div>
+
+    <span class="leg-hint">Click node to highlight · Scroll / drag to pan &amp; zoom · ← → Space during replay</span>
+  </div>
+
+  <!-- ── Viz canvas ───────────────────────────────────────── -->
+  <div id="viz-wrap">
+    <div id="viz"></div>
+  </div>
+
+</div><!-- #app -->
+
+<div id="tooltip"></div>
+
+<!-- D3 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+
+<!-- Data files — app handles either being missing gracefully -->
+<script>
+  window.__dataLoadFailed  = false;
+  window.__traceLoadFailed = false;
+</script>
+<script src="graph_data.js"   onerror="window.__dataLoadFailed  = true"></script>
+<script src="search_trace.js" onerror="window.__traceLoadFailed = true"></script>
+
+<!-- Application scripts -->
+<script src="js/data.js"></script>
+<script src="js/graph.js"></script>
+<script src="js/search_anim.js"></script>
+<script src="js/main.js"></script>
 
 </body>
 </html>

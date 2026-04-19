@@ -32,6 +32,7 @@
 
 
 #include "graphplan.h"
+#include "dump_search.h"
 
 extern hashtable_t *fact_table, *op_table;  /* the arrays of hash tables */
 extern int do_memo, do_subsets, do_lower, xviewing, do_buildup, do_completeness, do_greedy, do_heuristic;
@@ -70,11 +71,15 @@ int do_plan(int maxtime)
   int num_goals, i, result;
   num_goals = setup(maxtime);
   global_maxtime = maxtime;
+  trace_open();
+  trace_goal_set(maxtime, goals_at[maxtime], num_goals);
   printf("goals at time %d:\n  ",maxtime+1);
   for(i=0; i < num_goals; ++i) printf("%s ",goals_at[maxtime][i]->name);
   printf("\n\n");
   if (do_lower && !can_hope_to_solve(goals_at[maxtime],num_goals,maxtime)) {
     if (do_memo) insert_bad(goals_at[maxtime], num_goals, maxtime);
+    trace_failure();
+    trace_close();
     return 0;
   }
   for_printing = 1;
@@ -87,6 +92,10 @@ int do_plan(int maxtime)
       draw_fact(goals_at[maxtime][i],maxtime,0);
     }
   }
+
+  if (result) trace_solution(maxtime);
+  else trace_failure();
+  trace_close();
   return result;
 }
 
@@ -248,6 +257,9 @@ int basicplan(int cindex, int nindex, int time)
       for(i=0; i < nindex; ++i) printf("%s ",goals_at[time-1][i]->name);
       printf("\n\n");
     }
+
+    trace_goal_set(time-1, goals_at[time-1], nindex);
+
     if (do_memo) {
       if (lookup_bad(goals_at[time-1], nindex, time-1)) return 0;
       if (do_greedy && lookup_good(goals_at[time-1], nindex, time-1)) return 1;
@@ -287,15 +299,24 @@ int basicplan(int cindex, int nindex, int time)
   /* Try the ops and noops */
   for(e = v->in_edges; e; e = e->next) {
     op = e->endpt;
-    if (IS_MARKED(op)) continue; /* exclusive of something used*/
+
+    trace_try(time-1, op, v);
+
+    if (IS_MARKED(op)) {
+      trace_mutex(time-1, op, v);
+      continue;
+    }
 
     /* ok, do it. */
     mark_exclusive(op);
     /* check to see if causes problems for future goals */
     if (!goals_still_possible(cindex,time)) {
+      trace_cutoff(time-1, op, v);
       unmark_exclusive(op);
       continue;
     }
+
+    trace_select(time-1, op);
     op->used++;
 
     /* THIS SORT-OF CORRESPONDS TO STATE-SPACE STEPS */
@@ -328,12 +349,14 @@ int basicplan(int cindex, int nindex, int time)
     unmark_exclusive(op);
     if (result == 1 && for_printing) return 1;   /* DONE */
 
+    trace_deselect(time-1, op);         /* only reached if result==0 */
     op->used--;
     if (xviewing) draw_op(op, time-1, 0, 1);  /* XVIEWING */
 
     if (result == 1) return 1;                   /* DONE */
   }
-  /* otherwise, return 0 */
+
+  trace_backtrack(time);
   return 0;
 }
 

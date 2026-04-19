@@ -411,45 +411,54 @@ function _setupControls(data) {
   // Event listeners update persistent state AND UI
   chkNoops.addEventListener('change', function () {
     persistentToggles.noops = this.checked;
-    _applyNoopToggle(data);
+    _applyToggles(data)
   });
   chkDel.addEventListener('change', function () {
     persistentToggles.del = this.checked;
-    _applyDelToggle();
+    _applyToggles(data)
   });
   chkMutex.addEventListener('change', function () {
     persistentToggles.mutex = this.checked;
-    _applyMutexToggle();
+    _applyToggles(data)
   });
 
   // Apply initial toggle state to freshly rendered graph
-  _applyNoopToggle(data);
-  _applyDelToggle();
-  _applyMutexToggle();
+  _applyToggles(data)
 }
 
-// ── Toggle application helpers ──────────────────────────
-function _applyNoopToggle(data) {
-  const show = persistentToggles.noops;
-  d3.selectAll('.node-noop').attr('display', show ? null : 'none');
-  d3.selectAll('.mutex-arc').filter(p => {
-    const a = data.nodeById[p.a];
-    const b = data.nodeById[p.b];
-    return (a && a.kind === 'noop') || (b && b.kind === 'noop');
-  }).attr('display', show ? null : 'none');
-  d3.selectAll('.edge').filter(e => {
-    const s = data.nodeById[e.src];
-    const t = data.nodeById[e.tgt];
-    return (s && s.kind === 'noop') || (t && t.kind === 'noop');
-  }).attr('display', show ? null : 'none');
+function _applyToggles(data) {
+  d3.selectAll('.node-noop')
+      .attr('display', d => _computeVisibility(d, data).nodeNoop ? null : 'none');
+
+  d3.selectAll('.edge')
+      .attr('display', d => _computeVisibility(d, data).edge ? null : 'none');
+
+  d3.selectAll('.e-del')
+      .attr('display', d => _computeVisibility(d, data).del ? null : 'none');
+
+  d3.selectAll('.mutex-arc')
+      .attr('display', d => _computeVisibility(d, data).mutex ? null : 'none');
 }
 
-function _applyDelToggle() {
-  d3.selectAll('.e-del').attr('display', persistentToggles.del ? null : 'none');
-}
+function _computeVisibility(d, data) {
+  const showNoops = persistentToggles.noops;
+  const showDel   = persistentToggles.del;
+  const showMutex = persistentToggles.mutex;
 
-function _applyMutexToggle() {
-  d3.selectAll('.mutex-arc').attr('display', persistentToggles.mutex ? null : 'none');
+  const s = data.nodeById[d.src];
+  const t = data.nodeById[d.tgt];
+  const a = data.nodeById[d.a];
+  const b = data.nodeById[d.b];
+
+  const isNoopEdge = (s && s.kind === 'noop') || (t && t.kind === 'noop');
+  const isNoopArc = (a && a.kind === 'noop') || (b && b.kind === 'noop');
+
+  return {
+    nodeNoop: showNoops,
+    edge: showNoops || !isNoopEdge,
+    del: showDel && (showNoops || !isNoopEdge),
+    mutex: showMutex && (showNoops || !isNoopArc)
+  };
 }
 
 function _resetView() {

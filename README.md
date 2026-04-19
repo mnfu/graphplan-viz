@@ -1,8 +1,6 @@
 # Graphplan Visualizer
 A local visualizer for the original Graphplan algorithm. Collects data from the original 1997 C code and renders it in the browser.
 
-### WIP!!! Currently, this visualization only visualizes the "Planning Graph" created during Step 2 as defined in `graphplan.c`
-
 ---
 
 ## Requirements

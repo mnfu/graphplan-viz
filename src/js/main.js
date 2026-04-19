@@ -21,11 +21,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const data = processData(GRAPH_DATA);
   renderGraph(data);
+  initSearchAnim(data);
+
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       renderGraph(data);
+      reapplySearchState();
     }, 50);
   });
 });
