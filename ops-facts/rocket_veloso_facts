@@ -1,0 +1,18 @@
+Rocket problem from Veloso 1989
+1 rocket, 2 cargos, 2 locations
+
+(L PLACE)
+(P PLACE)
+(R ROCKET)
+(A CARGO)
+(B CARGO)
+
+(preconds
+ (at R L)
+ (at A L)
+ (at B L)
+ (has-fuel R))
+
+(effects
+ (at A P)
+ (at B P))

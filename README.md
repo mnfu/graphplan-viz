@@ -1,8 +1,9 @@
 # Graphplan Visualizer
 A local visualizer for the original Graphplan algorithm. Collects data from the original 1997 C code and renders it in the browser.
 
-There is a github pages demo that uses data generated from `rocket_ops` and `rocket_facts2`:
+There is a github pages demo that uses data generated from `rocket_ops` and `rocket_veloso_facts`:
 https://mnfu.github.io/graphplan-viz/
+This *should* match the Figure 2 planning graph in: A. Blum and M. Furst, "Fast Planning Through Planning Graph Analysis", as well as Figure 1's defined ops.
 
 ---
 
