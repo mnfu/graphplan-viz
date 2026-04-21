@@ -65,29 +65,29 @@ function renderGraph(data) {
 
   /* Grid pattern for background texture */
   defs.append('pattern')
-    .attr('id', 'grid')
-    .attr('width', CFG.colW)
-    .attr('height', CFG.rowH)
-    .attr('patternUnits', 'userSpaceOnUse')
-    .append('path')
-    .attr('d', `M ${CFG.colW} 0 L 0 0 0 ${CFG.rowH}`)
-    .attr('fill', 'none')
-    .attr('stroke', C.gridLine)
-    .attr('stroke-width', 0.5);
+      .attr('id', 'grid')
+      .attr('width', CFG.colW)
+      .attr('height', CFG.rowH)
+      .attr('patternUnits', 'userSpaceOnUse')
+      .append('path')
+      .attr('d', `M ${CFG.colW} 0 L 0 0 0 ${CFG.rowH}`)
+      .attr('fill', 'none')
+      .attr('stroke', C.gridLine)
+      .attr('stroke-width', 0.5);
 
   /* Background rect (receives zoom, also deselects on click) */
   _svg.append('rect')
-    .attr('width', W)
-    .attr('height', H)
-    .attr('fill', 'url(#grid)')
-    .on('click', () => {
-      if (_selectedId) { _selectedId = null; _resetHighlight(); }
-    });
+      .attr('width', W)
+      .attr('height', H)
+      .attr('fill', 'url(#grid)')
+      .on('click', () => {
+        if (_selectedId) { _selectedId = null; _resetHighlight(); }
+      });
 
   /* ── Zoom / pan ─────────────────────────────────────────── */
   _zoom = d3.zoom()
-    .scaleExtent([0.1, 5])
-    .on('zoom', ev => g.attr('transform', ev.transform));
+      .scaleExtent([0.1, 5])
+      .on('zoom', ev => g.attr('transform', ev.transform));
   _svg.call(_zoom)
       .on("dblclick.zoom", null);
 
@@ -114,41 +114,41 @@ function _drawColBgs(g, data) {
     const h      = data.maxRows * CFG.rowH + 38;
 
     g.append('rect')
-      .attr('x', x + 4)
-      .attr('y', y)
-      .attr('width',  CFG.colW - 8)
-      .attr('height', h)
-      .attr('rx', 8)
-      .attr('fill',   isProp ? C.colBgProp   : C.colBgAction)
-      .attr('stroke', isProp ? C.colBordProp : C.colBordAct)
-      .attr('stroke-width', 1);
+        .attr('x', x + 4)
+        .attr('y', y)
+        .attr('width',  CFG.colW - 8)
+        .attr('height', h)
+        .attr('rx', 8)
+        .attr('fill',   isProp ? C.colBgProp   : C.colBgAction)
+        .attr('stroke', isProp ? C.colBordProp : C.colBordAct)
+        .attr('stroke-width', 1);
 
     /* Column header label */
     const label = isProp
-      ? (t === 0 ? 'Initial props' : t === data.maxtime ? 'Goal props' : `Props  t=${t}`)
-      : `Actions  t=${t}`;
+        ? (t === 0 ? 'Initial props' : t === data.maxtime ? 'Goal props' : `Props  t=${t + 1}`)
+        : `Actions  t=${t + 1}`;
 
     g.append('text')
-      .attr('x', x + CFG.colW / 2)
-      .attr('y', y + 16)
-      .attr('text-anchor', 'middle')
-      .attr('font-size', 9.5)
-      .attr('font-family', "'IBM Plex Mono', monospace")
-      .attr('fill', '#6b7e96')
-      .attr('font-weight', '500')
-      .attr('letter-spacing', '0.04em')
-      .text(label);
+        .attr('x', x + CFG.colW / 2)
+        .attr('y', y + 16)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 9.5)
+        .attr('font-family', "'IBM Plex Mono', monospace")
+        .attr('fill', '#6b7e96')
+        .attr('font-weight', '500')
+        .attr('letter-spacing', '0.04em')
+        .text(label);
 
     /* Time-step marker below header */
     if (isProp) {
       g.append('text')
-        .attr('x', x + CFG.colW / 2)
-        .attr('y', y + 28)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', 8)
-        .attr('font-family', "'IBM Plex Mono', monospace")
-        .attr('fill', '#aab8c8')
-        .text(`t = ${t}`);
+          .attr('x', x + CFG.colW / 2)
+          .attr('y', y + 28)
+          .attr('text-anchor', 'middle')
+          .attr('font-size', 8)
+          .attr('font-family', "'IBM Plex Mono', monospace")
+          .attr('fill', '#aab8c8')
+          .text(`t = ${t + 1}`);
     }
   }
 }
@@ -156,16 +156,16 @@ function _drawColBgs(g, data) {
 /* ── Arrowhead marker helper ──────────────────────────────── */
 function _arrow(defs, id, color) {
   defs.append('marker')
-    .attr('id', id)
-    .attr('viewBox', '0 -4 8 8')
-    .attr('refX', 7)
-    .attr('refY', 0)
-    .attr('markerWidth',  5)
-    .attr('markerHeight', 5)
-    .attr('orient', 'auto')
-    .append('path')
-    .attr('d', 'M0,-4L8,0L0,4')
-    .attr('fill', color);
+      .attr('id', id)
+      .attr('viewBox', '0 -4 8 8')
+      .attr('refX', 7)
+      .attr('refY', 0)
+      .attr('markerWidth',  5)
+      .attr('markerHeight', 5)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-4L8,0L0,4')
+      .attr('fill', color);
 }
 
 /* ── Edges ────────────────────────────────────────────────── */
@@ -179,17 +179,17 @@ function _drawEdges(g, data) {
 
   etypes.forEach(({ k, color, dash, arrow }) => {
     g.selectAll(`.e-${k}`)
-      .data((data.edges || []).filter(e => e.etype === k))
-      .join('path')
-      .attr('class',         `edge e-${k}`)
-      .attr('d',             e => _bezier(data.nodeById[e.src], data.nodeById[e.tgt]))
-      .attr('fill',          'none')
-      .attr('stroke',        color)
-      .attr('color',         color)
-      .attr('stroke-width',  1.4)
-      .attr('stroke-dasharray', dash)
-      .attr('marker-end',    `url(#${arrow})`)
-      .attr('opacity',       1);
+        .data((data.edges || []).filter(e => e.etype === k))
+        .join('path')
+        .attr('class',         `edge e-${k}`)
+        .attr('d',             e => _bezier(data.nodeById[e.src], data.nodeById[e.tgt]))
+        .attr('fill',          'none')
+        .attr('stroke',        color)
+        .attr('color',         color)
+        .attr('stroke-width',  1.4)
+        .attr('stroke-dasharray', dash)
+        .attr('marker-end',    `url(#${arrow})`)
+        .attr('opacity',       1);
   });
 }
 
@@ -217,19 +217,19 @@ function _drawMutex(g, data) {
   ];
 
   g.selectAll('.mutex-arc')
-    .data(pairs)
-    .join('path')
-    .attr('class', 'mutex-arc')
-    .attr('d', ({ a, b, isAct }) => {
-      const n1 = data.nodeById[a];
-      const n2 = data.nodeById[b];
-      return n1 && n2 ? _mutexPath(n1, n2, isAct) : '';
-    })
-    .attr('fill',              'none')
-    .attr('stroke',            C.mutex)
-    .attr('stroke-width',      1.5)
-    .attr('stroke-dasharray',  '4,3')
-    .attr('opacity',           1);
+      .data(pairs)
+      .join('path')
+      .attr('class', 'mutex-arc')
+      .attr('d', ({ a, b, isAct }) => {
+        const n1 = data.nodeById[a];
+        const n2 = data.nodeById[b];
+        return n1 && n2 ? _mutexPath(n1, n2, isAct) : '';
+      })
+      .attr('fill',              'none')
+      .attr('stroke',            C.mutex)
+      .attr('stroke-width',      1.5)
+      .attr('stroke-dasharray',  '4,3')
+      .attr('opacity',           1);
 }
 
 /* Quadratic bezier that bulges sideways out of the column */
@@ -250,54 +250,54 @@ function _mutexPath(n1, n2, isAct) {
 /* ── Nodes ────────────────────────────────────────────────── */
 function _drawNodes(g, data) {
   const ng = g.selectAll('.node')
-    .data(data.nodes)
-    .join('g')
-    .attr('class',     d => `node node-${d.kind}`)
-    .attr('transform', d => `translate(${d.x},${d.y})`)
-    .attr('cursor',    'pointer')
-    .on('click',     (ev, d) => { ev.stopPropagation(); _onNodeClick(d, data); })
-    .on('mouseover', (ev, d) => _showTip(ev, d))
-    .on('mouseout',  ()      => _hideTip());
+      .data(data.nodes)
+      .join('g')
+      .attr('class',     d => `node node-${d.kind}`)
+      .attr('transform', d => `translate(${d.x},${d.y})`)
+      .attr('cursor',    'pointer')
+      .on('click',     (ev, d) => { ev.stopPropagation(); _onNodeClick(d, data); })
+      .on('mouseover', (ev, d) => _showTip(ev, d))
+      .on('mouseout',  ()      => _hideTip());
 
   /* ── Proposition circles ──────────────────────────────────── */
   const props = ng.filter(d => d.kind === 'prop');
 
   props.append('circle')
-    .attr('r',            CFG.propR)
-    .attr('fill',         d => d.isGoal ? C.goal        : C.prop)
-    .attr('stroke',       d => d.isGoal ? C.goalStroke  : C.propStroke)
-    .attr('stroke-width', d => d.isGoal ? 3 : 1.5);
+      .attr('r',            CFG.propR)
+      .attr('fill',         d => d.isGoal ? C.goal        : C.prop)
+      .attr('stroke',       d => d.isGoal ? C.goalStroke  : C.propStroke)
+      .attr('stroke-width', d => d.isGoal ? 3 : 1.5);
 
   /* Label below the circle */
   props.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('dy',          CFG.propR + 12)
-    .attr('font-size',   8.5)
-    .attr('font-family', "'IBM Plex Mono', monospace")
-    .attr('fill',        C.textLight)
-    .text(d => _short(d.label, 16));
+      .attr('text-anchor', 'middle')
+      .attr('dy',          CFG.propR + 12)
+      .attr('font-size',   8.5)
+      .attr('font-family', "'IBM Plex Mono', monospace")
+      .attr('fill',        C.textLight)
+      .text(d => _short(d.label, 16));
 
   /* ── Action / noop rectangles ─────────────────────────────── */
   const acts = ng.filter(d => d.kind !== 'prop');
 
   acts.append('rect')
-    .attr('x',            -CFG.actW / 2)
-    .attr('y',            -CFG.actH / 2)
-    .attr('width',         CFG.actW)
-    .attr('height',        CFG.actH)
-    .attr('rx',            5)
-    .attr('fill',         d => d.kind === 'noop' ? C.noop        : C.action)
-    .attr('stroke',       d => d.kind === 'noop' ? C.noopStroke  : C.actionStroke)
-    .attr('stroke-width', d => d.kind === 'noop' ? 1 : 1.5)
-    .attr('opacity',      1);
+      .attr('x',            -CFG.actW / 2)
+      .attr('y',            -CFG.actH / 2)
+      .attr('width',         CFG.actW)
+      .attr('height',        CFG.actH)
+      .attr('rx',            5)
+      .attr('fill',         d => d.kind === 'noop' ? C.noop        : C.action)
+      .attr('stroke',       d => d.kind === 'noop' ? C.noopStroke  : C.actionStroke)
+      .attr('stroke-width', d => d.kind === 'noop' ? 1 : 1.5)
+      .attr('opacity',      1);
 
   acts.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('dy',          '0.35em')
-    .attr('font-size',   8.5)
-    .attr('font-family', "'IBM Plex Mono', monospace")
-    .attr('fill',        C.textLight)
-    .text(d => _short(d.label, 22));
+      .attr('text-anchor', 'middle')
+      .attr('dy',          '0.35em')
+      .attr('font-size',   8.5)
+      .attr('font-family', "'IBM Plex Mono', monospace")
+      .attr('fill',        C.textLight)
+      .text(d => _short(d.label, 22));
 }
 
 /* Truncate + replace underscores with spaces */
@@ -331,17 +331,17 @@ function _onNodeClick(d, data) {
   d3.selectAll('.edge').classed('dim', e =>
       !(e.src === d.id || e.tgt === d.id))
       .each(function (e) {
-    const el = d3.select(this);
+        const el = d3.select(this);
 
-    const isActive = (e.src === d.id || e.tgt === d.id);
+        const isActive = (e.src === d.id || e.tgt === d.id);
 
-    const base = e.etype; // 'pre' | 'add' | 'del'
+        const base = e.etype; // 'pre' | 'add' | 'del'
 
-    el.attr(
-        'marker-end',
-        `url(#arr-${base}${isActive ? '' : '-dim'})`
-    );
-  });
+        el.attr(
+            'marker-end',
+            `url(#arr-${base}${isActive ? '' : '-dim'})`
+        );
+      });
 
   /* Mutex */
   d3.selectAll('.mutex-arc').classed('dim', p =>
@@ -366,10 +366,10 @@ function _showTip(ev, d) {
   const el = document.getElementById('tooltip');
   const kindMap = { prop: 'Proposition', action: 'Action', noop: 'No-op (frame)' };
   el.innerHTML =
-    `<div class="tip-kind">${kindMap[d.kind] || d.kind}</div>` +
-    `<div class="tip-name">${d.label.replace(/_/g, ' ')}</div>` +
-    `<div class="tip-time">time step: ${d.time}</div>` +
-    (d.isGoal ? '<div class="tip-goal">⭐ Goal proposition</div>' : '');
+      `<div class="tip-kind">${kindMap[d.kind] || d.kind}</div>` +
+      `<div class="tip-name">${d.label.replace(/_/g, ' ')}</div>` +
+      `<div class="tip-time">time step: ${d.time + 1}</div>` +
+      (d.isGoal ? '<div class="tip-goal">⭐ Goal proposition</div>' : '');
   el.style.display = 'block';
   _moveTip(ev);
 }
@@ -466,6 +466,6 @@ function _resetView() {
   _resetHighlight();
   if (_svg && _zoom) {
     _svg.transition().duration(450)
-      .call(_zoom.transform, d3.zoomIdentity);
+        .call(_zoom.transform, d3.zoomIdentity);
   }
 }

@@ -242,8 +242,8 @@ html, body {
   border-radius: 10px;
   background: var(--canvas-bg);
   box-shadow:
-    0 0 0 1px rgba(0,0,0,0.12),
-    0 8px 32px rgba(0,0,0,0.4);
+          0 0 0 1px rgba(0,0,0,0.12),
+          0 8px 32px rgba(0,0,0,0.4);
 }
 
 /* ── Error state ──────────────────────────────────────────── */
@@ -611,4 +611,3 @@ html, body {
 .mutex-arc.sa-arc-dim {
   opacity: 0.05;
 }
-

@@ -78,7 +78,7 @@ function processData(raw) {
 
   /* ── 4. compute pixel positions ─────────────────────────── */
   const colSize = Object.fromEntries(
-    Object.entries(byCol).map(([c, ns]) => [+c, ns.length])
+      Object.entries(byCol).map(([c, ns]) => [+c, ns.length])
   );
   const maxRows = Math.max(1, ...Object.values(colSize));
 
