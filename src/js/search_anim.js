@@ -18,7 +18,7 @@
 /*
  * I think we really bottom out at around 8ms for speed improvements, but 4ms included just because
  */
-const SA_SPEEDS = [1200, 800, 500, 300, 180, 100, 60, 32, 16, 8, 4];
+const SA_SPEEDS = [2400, 1200, 800, 400, 180, 100, 60, 32, 16, 8, 4];
 
 /* ── Module state ────────────────────────────────────────── */
 let _data     = null;   /* processData() result — for edge lookups */
@@ -224,13 +224,13 @@ function _updateStatus(s) {
     const n   = _humanName;
 
     const msg = {
-        goal_set:  e => `Goals at t=${e.time}`,
+        goal_set:  e => `Goals at t=${e.time + 1}`,
         try:       e => `Try  ${n(e.action)}  →  ${n(e.for_goal)}`,
         mutex:     e => `Mutex conflict: ${n(e.action)}`,
         cutoff:    e => `Cutoff: ${n(e.action)}`,
         select:    e => `Commit: ${n(e.action)}`,
         deselect:  e => `Undo: ${n(e.action)}`,
-        backtrack: e => `Backtrack at t=${e.time}`,
+        backtrack: e => `Backtrack at t=${e.time + 1}`,
     };
 
     el.textContent = msg[evt.type] ? msg[evt.type](evt) : evt.type;

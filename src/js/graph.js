@@ -125,8 +125,8 @@ function _drawColBgs(g, data) {
 
     /* Column header label */
     const label = isProp
-      ? (t === 0 ? 'Initial props' : t === data.maxtime ? 'Goal props' : `Props  t=${t}`)
-      : `Actions  t=${t}`;
+      ? (t === 0 ? 'Initial props' : t === data.maxtime ? 'Goal props' : `Props  t=${t + 1}`)
+      : `Actions  t=${t + 1}`;
 
     g.append('text')
       .attr('x', x + CFG.colW / 2)
@@ -148,7 +148,7 @@ function _drawColBgs(g, data) {
         .attr('font-size', 8)
         .attr('font-family', "'IBM Plex Mono', monospace")
         .attr('fill', '#aab8c8')
-        .text(`t = ${t}`);
+        .text(`t = ${t + 1}`);
     }
   }
 }
@@ -368,7 +368,7 @@ function _showTip(ev, d) {
   el.innerHTML =
     `<div class="tip-kind">${kindMap[d.kind] || d.kind}</div>` +
     `<div class="tip-name">${d.label.replace(/_/g, ' ')}</div>` +
-    `<div class="tip-time">time step: ${d.time}</div>` +
+    `<div class="tip-time">time step: ${d.time + 1}</div>` +
     (d.isGoal ? '<div class="tip-goal">⭐ Goal proposition</div>' : '');
   el.style.display = 'block';
   _moveTip(ev);
