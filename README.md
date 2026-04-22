@@ -1,9 +1,22 @@
 # Graphplan Visualizer
-A local visualizer for the original Graphplan algorithm. Collects data from the original 1997 C code and renders it in the browser.
+A local visualizer for the original Graphplan algorithm. Collects data from the original 1995 C code and renders it in the browser.
 
 There is a github pages demo that uses data generated from `rocket_ops` and `rocket_veloso_facts`:
 https://mnfu.github.io/graphplan-viz/
 This *should* match the Figure 2 planning graph in: A. Blum and M. Furst, "Fast Planning Through Planning Graph Analysis", as well as Figure 1's defined ops.
+
+> [!IMPORTANT]
+> This project includes original Graphplan implementation code by Blum & Furst (1995), released with a non-commercial research-use permission notice. This repository is provided for educational and research purposes only and is not intended for commercial use. The original notice is included below.
+
+/*********************** Graphplan **************************************\
+  (C) Copyright 1995 Avrim Blum and Merrick Furst
+
+  All rights reserved. Use of this software is permitted for non-commercial\
+  research purposes, and it may be copied only for that use.  All copies must\
+  include this copyright message.  This software is made available AS IS, and\
+  neither the authors nor CMU make any warranty about the software or its\
+  performance.\
+*************************************************************************/
 
 ---
 
@@ -13,6 +26,8 @@ This project expects a **Linux-like environment**.
 
 * On Linux/macOS: you're likely good to go
 * On Windows: WSL is recommended (other Unix-like environments may work)
+
+Also, ensure you have `make` & `gcc` installed.
 
 ---
 
@@ -60,7 +75,7 @@ Once `graph_data.js` is generated (technically `search_trace.js` is optional):
 2. The graph will render automatically
 
 If no `graph_data.js` is present, the UI will present an error message.\
-If no `search_trace.js` is present, the `Search replay` toggle will do nothing.
+If no `search_trace.js` is present, the `Search replay` toggle will do nothing (or will not appear at all).
 
 ---
 
